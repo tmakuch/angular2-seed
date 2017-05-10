@@ -8,7 +8,7 @@ const isAot = process.env.AOT;
 module.exports = {
     entry: {
         'polyfills': './src/polyfills.ts',
-        'main': isAot ? './src/main.aot.ts' : './src/main.browser.ts'
+        'main': isAot ? './src/main.aot.ts' : './src/main.ts'
     },
     resolve: {
         extensions: [ '.ts', '.js' ],
@@ -23,12 +23,7 @@ module.exports = {
                 test: /\.ts$/,
                 use: [
                     'ng-router-loader',
-                    {
-                        loader: 'awesome-typescript-loader',
-                        options: {
-                            configFileName: 'tsconfig.dev.json'
-                        }
-                    },
+                    'awesome-typescript-loader',
                     'angular2-template-loader'
                 ],
                 exclude: [ /\.(spec|e2e)\.ts$/ ]
