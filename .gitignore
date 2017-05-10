@@ -1,3 +1,13 @@
-node_modules 
 .vscode
-npm-debug.log*
+.idea
+node_modules
+*.log
+coverage
+dist
+lib
+
+#aot
+*.ngfactory.ts
+*.css.shim.ts
+*.ngsummary.json
+*.shim.ngstyle.ts

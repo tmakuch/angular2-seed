@@ -1,38 +1,48 @@
-var webpackConfig = require('./webpack.test');
-
 module.exports = function (config) {
-    var _config = {
+    const testWebpackConfig = require('./webpack.test.js');
+
+    const configuration = {
         basePath: '',
+        frameworks: [ 'jasmine' ],
+        exclude: [],
+        client: {
+            captureConsole: false
+        },
+        files: [
+            { pattern: './config/spec-bundle.js', watched: false },
+            { pattern: './src/assets/**/*', watched: false, included: false, served: true, nocache: false }
+        ],
 
-        frameworks: ['jasmine'],
+        preprocessors: { './config/spec-bundle.js': [ 'coverage', 'webpack', 'sourcemap' ] },
 
-        files: [{
-            pattern: './config/karma-test-shim.js',
-            watched: false
-        }],
+        webpack: testWebpackConfig,
 
-        preprocessors: {
-            './config/karma-test-shim.js': ['webpack', 'sourcemap']
+        coverageReporter: {
+            type: 'in-memory'
         },
 
-        webpack: webpackConfig,
+        remapCoverageReporter: {
+            'text-summary': null,
+            json: './coverage/coverage.json',
+            html: './coverage/html'
+        },
 
         webpackMiddleware: {
-            stats: 'errors-only'
+            noInfo: true,
+            stats: {
+                chunks: false
+            }
         },
-
-        webpackServer: {
-            noInfo: true
-        },
-
-        reporters: ['progress'],
+        reporters: [ 'dots', 'coverage', 'remap-coverage' ],
         port: 9876,
         colors: true,
-        logLevel: config.LOG_INFO,
+        logLevel: config.LOG_WARN,
         autoWatch: false,
-        browsers: ['PhantomJS'],
-        singleRun: true
+        singleRun: true,
+        browsers: [
+            'Chrome'
+        ]
     };
 
-    config.set(_config);
+    config.set(configuration);
 };

@@ -1,56 +1,78 @@
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var helpers = require('./helpers');
+const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
+const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const root = require('./helpers').root;
+const isAot = process.env.AOT;
 
 module.exports = {
     entry: {
         'polyfills': './src/polyfills.ts',
-        'vendor': './src/vendor.ts',
-        'app': './src/main.ts'
+        'main': isAot ? './src/main.aot.ts' : './src/main.browser.ts'
     },
-
     resolve: {
-        extensions: ['', '.ts', '.js', '.less']
+        extensions: [ '.ts', '.js' ],
+        modules: [
+            root('src'),
+            root('node_modules')
+        ]
     },
-
     module: {
-        loaders: [{
+        rules: [
+            {
                 test: /\.ts$/,
-                loaders: ['awesome-typescript-loader', 'angular2-template-loader']
+                use: [
+                    'ng-router-loader',
+                    {
+                        loader: 'awesome-typescript-loader',
+                        options: {
+                            configFileName: 'tsconfig.dev.json'
+                        }
+                    },
+                    'angular2-template-loader'
+                ],
+                exclude: [ /\.(spec|e2e)\.ts$/ ]
             },
             {
-                test: /\.html$/,
-                loader: 'html'
-            },
-            {
-                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-                loader: 'file?name=assets/[name].[hash].[ext]'
+                test: /\.json$/,
+                use: 'json-loader'
             },
             {
                 test: /\.css$/,
-                exclude: helpers.root('src', 'app'),
-                loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
-            },
-            {
-                test: /\.css$/,
-                include: helpers.root('src', 'app'),
-                loader: 'raw'
+                use: [ 'to-string-loader', 'css-loader' ],
+                exclude: [ root('src', 'styles') ]
             },
             {
                 test: /\.less$/,
-                loaders: ['css-to-string','css', 'less']
+                use: [ 'to-string-loader', 'css-loader', 'less-loader' ],
+                exclude: [ root('src', 'styles') ]
+            },
+            {
+                test: /\.html$/,
+                use: 'raw-loader',
+                exclude: [ root('src', 'index.html') ]
+            },
+            {
+                test: /\.(jpg|png|gif|eot|woff2?|svg|ttf)$/,
+                use: 'file-loader'
             }
-        ]
+        ],
+
     },
-
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin({
-            name: ['app', 'vendor', 'polyfills']
+        new CheckerPlugin(),
+        new CommonsChunkPlugin({
+            name: 'polyfills',
+            chunks: [ 'polyfills' ]
         }),
-
+        new ContextReplacementPlugin(
+            /angular(\\|\/)core(\\|\/)@angular/,
+            root('src')
+        ),
         new HtmlWebpackPlugin({
-            template: 'src/index.html'
+            template: 'src/index.html',
+            chunksSortMode: 'dependency',
+            inject: 'body'
         })
     ]
 };

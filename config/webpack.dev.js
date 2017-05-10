@@ -1,24 +1,52 @@
-var webpackMerge = require('webpack-merge');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var commonConfig = require('./webpack.common.js');
-var helpers = require('./helpers');
+const webpackMerge = require('webpack-merge');
+const commons = require('./webpack.common.js');
+const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
+const root = require('./helpers').root;
 
-module.exports = webpackMerge(commonConfig, {
-    devtool: 'cheap-module-eval-source-map',
+process.env.ENV = process.env.NODE_ENV = 'dev';
+
+module.exports = webpackMerge(commons, {
+    devtool: 'cheap-module-source-map',
 
     output: {
-        path: helpers.root('dist'),
-        publicPath: 'http://localhost:8080/',
+        path: root('dist'),
         filename: '[name].js',
-        chunkFilename: '[id].chunk.js'
+        sourceMapFilename: '[file].map',
+        chunkFilename: '[id].chunk.js',
+
+        library: 'lib.js',
+        libraryTarget: 'umd',
+    },
+
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [ 'style-loader', 'css-loader' ],
+                include: [ root('src', 'styles') ]
+            },
+            {
+                test: /\.less$/,
+                use: [ 'style-loader', 'css-loader', 'less-loader' ],
+                include: [ root('src', 'styles') ]
+            }
+        ]
     },
 
     plugins: [
-        new ExtractTextPlugin('[name].css')
+        new LoaderOptionsPlugin({
+            debug: true,
+            options: {}
+        })
     ],
 
     devServer: {
+        port: '3000',
+        host: '0.0.0.0',
         historyApiFallback: true,
-        stats: 'minimal'
+        watchOptions: {
+            aggregateTimeout: 300,
+            poll: 1000
+        }
     }
 });
