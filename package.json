@@ -6,8 +6,10 @@
     "start": "cross-env NODE_ENV=dev webpack-dev-server --inline --progress --port 8080",
     "test": "karma start",
     "lint": "tslint -c tslint.json \"src/**/*.ts\"",
-    "build": "rimraf dist && cross-env NODE_ENV=prod webpack --progress --profile --bail",
-    "build:aot": "rimraf aot && cross-env NODE_ENV=prod AOT=true webpack --progress --profile --bail"
+    "build:example": "rimraf dist && cross-env NODE_ENV=prod webpack --progress --profile --bail",
+    "build:example:aot": "rimraf aot && cross-env NODE_ENV=prod AOT=true webpack --progress --profile --bail",
+    "build:lib": "rimraf lib && cross-env NODE_ENV=lib webpack --progress --profile --bail",
+    "build:lib:aot": "rimraf lib && cross-env NODE_ENV=lib AOT=true webpack --progress --profile --bail"
   },
   "license": "MIT",
   "dependencies": {
