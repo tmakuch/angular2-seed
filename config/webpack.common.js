@@ -8,12 +8,13 @@ const isProd = process.env.NODE_ENV === 'prod';
 
 module.exports = {
     entry: {
-        'polyfills': './src/polyfills.ts',
-        'main': isAot ? './src/main.aot.ts' : './src/main.ts'
+        'polyfills': './example/polyfills.ts',
+        'main': isAot ? './example/main.aot.ts' : './example/main.ts'
     },
     resolve: {
         extensions: [ '.ts', '.js' ],
         modules: [
+            root('example'),
             root('src'),
             root('node_modules')
         ]
@@ -43,17 +44,17 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [ 'to-string-loader', 'css-loader' ],
-                exclude: [ root('src', 'styles') ]
+                exclude: [ root('example', 'styles') ]
             },
             {
                 test: /\.less$/,
                 use: [ 'to-string-loader', 'css-loader', 'less-loader' ],
-                exclude: [ root('src', 'styles') ]
+                exclude: [ root('example', 'styles') ]
             },
             {
                 test: /\.html$/,
                 use: 'raw-loader',
-                exclude: [ root('src', 'index.html') ]
+                exclude: [ root('example', 'index.html') ]
             },
             {
                 test: /\.(jpg|png|gif|eot|woff2?|svg|ttf)$/,
@@ -73,7 +74,7 @@ module.exports = {
             root('src')
         ),
         new HtmlWebpackPlugin({
-            template: 'src/index.html',
+            template: 'example/index.html',
             chunksSortMode: 'dependency',
             inject: 'body'
         })

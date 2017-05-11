@@ -21,12 +21,12 @@ module.exports = webpackMerge(commons, {
             {
                 test: /\.css$/,
                 use: [ 'style-loader', 'css-loader' ],
-                include: [ root('src', 'styles') ]
+                include: [ root('example', 'styles') ]
             },
             {
                 test: /\.less$/,
                 use: [ 'style-loader', 'css-loader', 'less-loader' ],
-                include: [ root('src', 'styles') ]
+                include: [ root('example', 'styles') ]
             }
         ]
     },

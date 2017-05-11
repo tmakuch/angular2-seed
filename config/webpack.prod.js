@@ -28,7 +28,7 @@ module.exports = webpackMerge(commons, {
                     fallback: 'style-loader',
                     use: 'css-loader'
                 }),
-                include: [ root('src', 'styles') ]
+                include: [ root('example', 'styles') ]
             },
             {
                 test: /\.less$/,
@@ -36,14 +36,14 @@ module.exports = webpackMerge(commons, {
                     fallback: 'style-loader',
                     use: 'css-loader!less-loader'
                 }),
-                include: [ root('src', 'styles') ]
+                include: [ root('example', 'styles') ]
             }
         ]
     },
     plugins: [
         isAot ? new ngToolsWebpack.AotPlugin({
             tsConfigPath: './tsconfig.json',
-            entryModule: path.join(__dirname, '..', '/src/app/app.module#AppModule')
+            entryModule: path.join(__dirname, '..', '/example/app/app.module#AppModule')
         }) : null,
         new ExtractTextPlugin('[name].[contenthash].css'),
         new UglifyJsPlugin({

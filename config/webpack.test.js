@@ -16,7 +16,7 @@ module.exports = {
     resolve: {
         extensions: [ '.ts', '.js' ],
         modules: [
-            root('src'),
+            root('example'),
             'node_modules'
         ]
     },
@@ -52,22 +52,22 @@ module.exports = {
             {
                 test: /\.json$/,
                 loader: 'json-loader',
-                exclude: [ root('src/index.html') ]
+                exclude: [ root('example/index.html') ]
             },
             {
                 test: /\.css$/,
                 loader: [ 'to-string-loader', 'css-loader' ],
-                exclude: [ root('src', 'index.html') ]
+                exclude: [ root('example', 'index.html') ]
             },
             {
                 test: /\.less$/,
                 loader: [ 'to-string-loader', 'css-loader', 'less-loader'  ],
-                exclude: [ root('src', 'index.html') ]
+                exclude: [ root('example', 'index.html') ]
             },
             {
                 test: /\.html$/,
                 loader: 'raw-loader',
-                exclude: [ root('src', 'index.html') ]
+                exclude: [ root('example', 'index.html') ]
             }
         ]
     },
@@ -75,7 +75,7 @@ module.exports = {
     plugins: [
         new ContextReplacementPlugin(
             /angular(\\|\/)core(\\|\/)@angular/,
-            root('src')
+            root('example')
         ),
         new LoaderOptionsPlugin({
             debug: false
