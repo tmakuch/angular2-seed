@@ -3,8 +3,6 @@ const commons = require('./webpack.common.js');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const root = require('./helpers').root;
 
-process.env.ENV = process.env.NODE_ENV = 'dev';
-
 module.exports = webpackMerge(commons, {
     devtool: 'cheap-module-source-map',
 

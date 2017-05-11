@@ -1,10 +1,11 @@
 .vscode
 .idea
-node_modules
+/node_modules
 *.log
-coverage
-dist
-lib
+/coverage
+/dist
+/lib
+/aot
 
 #aot
 *.ngfactory.ts

@@ -30,9 +30,7 @@
   "exclude": [
     "node_modules",
     "lib",
-    "dist",
-    "src/**/*.spec.ts",
-    "src/**/*.e2e.ts"
+    "dist"
   ],
   "angularCompilerOptions": {
     "genDir": ".",

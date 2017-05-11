@@ -3,7 +3,8 @@ const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const root = require('./helpers').root;
-const isAot = process.env.AOT;
+const isAot = process.env.AOT === 'true';
+const isProd = process.env.NODE_ENV === 'prod';
 
 module.exports = {
     entry: {
@@ -25,7 +26,12 @@ module.exports = {
                     '@ngtools/webpack'
                 ] : [
                     'ng-router-loader',
-                    'awesome-typescript-loader',
+                    {
+                        loader: 'awesome-typescript-loader',
+                        options: {
+                            configFileName: isProd ? 'config/ts/tsconfig.prod.json' : 'config/ts/tsconfig.dev.json'
+                        },
+                    },
                     'angular2-template-loader'
                 ],
                 exclude: [ /\.(spec|e2e)\.ts$/ ]
