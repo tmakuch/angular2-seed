@@ -4,15 +4,17 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HashedModuleIdsPlugin = require('webpack/lib/HashedModuleIdsPlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
+const ngToolsWebpack = require('@ngtools/webpack');
 const root = require('./helpers').root;
 
+const isAot = process.env.AOT;
 process.env.NODE_ENV = process.env.ENV = 'prod';
 
 module.exports = webpackMerge(commons, {
     devtool: 'source-map',
 
     output: {
-        path: root('dist'),
+        path: root(isAot ? 'dist' : 'aot'),
         filename: '[name].[chunkhash].js',
         sourceMapFilename: '[file].map',
         chunkFilename: '[name].[chunkhash].chunk.js'
@@ -39,6 +41,10 @@ module.exports = webpackMerge(commons, {
         ]
     },
     plugins: [
+        isAot ? new ngToolsWebpack.AotPlugin({
+            tsConfigPath: './tsconfig.json',
+            entryModule: __dirname + '/app/app.module#AppModule'
+        }) : null,
         new ExtractTextPlugin('[name].[contenthash].css'),
         new UglifyJsPlugin({
             // beautify: true, //debug
@@ -95,5 +101,5 @@ module.exports = webpackMerge(commons, {
                 }
             }
         })
-    ]
+    ].filter(plugin => plugin !== null)
 });

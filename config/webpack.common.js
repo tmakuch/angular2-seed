@@ -21,7 +21,9 @@ module.exports = {
         rules: [
             {
                 test: /\.ts$/,
-                use: [
+                use: isAot ? [
+                    '@ngtools/webpack'
+                ] : [
                     'ng-router-loader',
                     'awesome-typescript-loader',
                     'angular2-template-loader'
