@@ -6,6 +6,7 @@
 /dist
 /lib
 /aot
+*.d.ts
 
 #aot
 *.ngfactory.ts

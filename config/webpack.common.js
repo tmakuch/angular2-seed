@@ -4,7 +4,6 @@ const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const root = require('./helpers').root;
 const isAot = process.env.AOT === 'true';
-const isProd = process.env.NODE_ENV === 'prod';
 
 module.exports = {
     entry: {
@@ -30,7 +29,7 @@ module.exports = {
                     {
                         loader: 'awesome-typescript-loader',
                         options: {
-                            configFileName: isProd ? 'config/ts/tsconfig.prod.json' : 'config/ts/tsconfig.dev.json'
+                            configFileName: `config/ts/tsconfig.${process.env.NODE_ENV}.json`
                         },
                     },
                     'angular2-template-loader'

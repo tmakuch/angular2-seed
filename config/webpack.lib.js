@@ -3,8 +3,9 @@ const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
-const root = require('./helpers').root;
+const helpers = require('./helpers');
 const isAot = process.env.AOT === 'true';
+const package = require('../package.json');
 
 module.exports = {
     devtool: 'source-map',
@@ -13,15 +14,15 @@ module.exports = {
     },
     output: {
         filename: 'lib.js',
-        path: root('lib'),
+        path: helpers.root('lib'),
         library: 'lib.js',
         libraryTarget: 'umd',
     },
     resolve: {
         extensions: [ '.ts', '.js' ],
         modules: [
-            root('src'),
-            root('node_modules')
+            helpers.root('src'),
+            helpers.root('node_modules')
         ]
     },
     module: {
@@ -71,9 +72,10 @@ module.exports = {
             tsConfigPath: './tsconfig.json',
             entryModule: path.join(__dirname, '..', '/example/app/app.module#AppModule')
         }) : null,
+        new helpers.DtsBundlerPlugin(package.name, 'src/**/*.d.ts', '../lib/lib.d.ts'),
         new ContextReplacementPlugin(
             /angular(\\|\/)core(\\|\/)@angular/,
-            root('src')
+            helpers.root('src')
         ),
         // new UglifyJsPlugin({
         //     // beautify: true, //debug
